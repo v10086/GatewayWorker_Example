@@ -1,0 +1,49 @@
+version: '3'
+
+services:
+    register:
+        build:
+            context: ./docker/php
+        volumes:
+            - ./register:/srv/www
+        command: php /srv/www/start.php start
+    gateway:
+        build:
+            context: ./docker/php
+        ports:
+            - 8282:80
+        volumes:
+            - ./gateway:/srv/www
+        environment:
+            GATEWAY_IP: gateway
+        command: php /srv/www/start.php start
+        depends_on:
+            - register
+    gateway_2:
+        build:
+            context: ./docker/php
+        ports:
+            - 8283:80
+        volumes:
+            - ./gateway:/srv/www
+        environment:
+            GATEWAY_IP: gateway_2
+        command: php /srv/www/start.php start
+        depends_on:
+            - register
+    business:
+        build:
+            context: ./docker/php
+        volumes:
+            - ./business:/srv/www
+        command: php /srv/www/start.php start
+        depends_on:
+            - register
+    business_2:
+        build:
+            context: ./docker/php
+        volumes:
+            - ./business:/srv/www
+        command: php /srv/www/start.php start
+        depends_on:
+            - register
